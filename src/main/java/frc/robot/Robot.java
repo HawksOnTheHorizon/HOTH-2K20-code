@@ -7,11 +7,13 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 
@@ -25,14 +27,18 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  */
 public class Robot extends TimedRobot {
 Joystick jStick = new Joystick(0);
-WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(4);
+JoystickButton x = new JoystickButton(jStick, 3);
+JoystickButton b = new JoystickButton(jStick, 2);
+WPI_TalonSRX intake = new WPI_TalonSRX(6);
+WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(2);
 WPI_VictorSPX m_rearLeft = new WPI_VictorSPX(3);
 SpeedControllerGroup m_left = new SpeedControllerGroup(m_frontLeft, m_rearLeft);
 
-WPI_VictorSPX m_frontRight = new WPI_VictorSPX(5);
-WPI_VictorSPX m_rearRight = new WPI_VictorSPX(7);
+WPI_VictorSPX m_frontRight = new WPI_VictorSPX(4);
+WPI_VictorSPX m_rearRight = new WPI_VictorSPX(5);
 SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_rearRight);
 DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
+
 
 
 
@@ -90,7 +96,18 @@ DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
   public void teleopPeriodic() {
   m_drive.tankDrive(-jStick.getRawAxis(1), -jStick.getRawAxis(3));
   
+  if (x.get()) {
+    intake.set(1);
+  } else {
+    intake.set(0);
   }
+
+  if (b.get()) {
+    intake.set(-1);
+  } else {
+    intake.set(0);
+  }
+}
 
   /**
    * This function is called periodically during test mode.
