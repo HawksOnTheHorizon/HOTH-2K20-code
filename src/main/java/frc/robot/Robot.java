@@ -9,12 +9,16 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 
 
 
@@ -30,6 +34,7 @@ Joystick jStick = new Joystick(0);
 JoystickButton x = new JoystickButton(jStick, 3);
 JoystickButton b = new JoystickButton(jStick, 2);
 WPI_TalonSRX intake = new WPI_TalonSRX(6);
+
 WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(2);
 WPI_VictorSPX m_rearLeft = new WPI_VictorSPX(3);
 SpeedControllerGroup m_left = new SpeedControllerGroup(m_frontLeft, m_rearLeft);
@@ -38,6 +43,10 @@ WPI_VictorSPX m_frontRight = new WPI_VictorSPX(4);
 WPI_VictorSPX m_rearRight = new WPI_VictorSPX(5);
 SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_rearRight);
 DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
+
+I2C.Port i2cPort = I2C.Port.kOnboard;
+ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+
 
 
 
@@ -63,8 +72,17 @@ DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
    */
   @Override
   public void robotPeriodic() {
-  }
+  
+  Color detectedColor = m_colorSensor.getColor();
+  double IR = m_colorSensor.getIR();
 
+  SmartDashboard.putNumber("Red", detectedColor.red);
+  SmartDashboard.putNumber("Green", detectedColor.green);
+  SmartDashboard.putNumber("Blue", detectedColor.blue);
+  SmartDashboard.putNumber("IR", IR);
+
+
+  }
   /**
    * This autonomous (along with the chooser code above) shows how to select
    * between different autonomous modes using the dashboard. The sendable
@@ -94,16 +112,12 @@ DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
    */
   @Override
   public void teleopPeriodic() {
-  m_drive.tankDrive(-jStick.getRawAxis(1), -jStick.getRawAxis(3));
+  m_drive.tankDrive(jStick.getRawAxis(1), jStick.getRawAxis(5));
   
   if (x.get()) {
     intake.set(1);
-  } else {
-    intake.set(0);
-  }
-
-  if (b.get()) {
-    intake.set(-1);
+  } else if (b.get()) {
+    intake.set(-1); 
   } else {
     intake.set(0);
   }
