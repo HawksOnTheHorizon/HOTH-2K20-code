@@ -13,6 +13,7 @@ import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -31,9 +32,13 @@ import edu.wpi.first.wpilibj.util.Color;
  */
 public class Robot extends TimedRobot {
 Joystick jStick = new Joystick(0);
-JoystickButton x = new JoystickButton(jStick, 3);
-JoystickButton b = new JoystickButton(jStick, 2);
+Joystick jStick2 = new Joystick(1);
+JoystickButton x = new JoystickButton(jStick2, 1);
+JoystickButton b = new JoystickButton(jStick2, 3);
+JoystickButton y = new JoystickButton(jStick2, 4);
+JoystickButton a = new JoystickButton(jStick2, 2);
 WPI_TalonSRX intake = new WPI_TalonSRX(6);
+WPI_TalonSRX outtake = new WPI_TalonSRX(7);
 
 WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(2);
 WPI_VictorSPX m_rearLeft = new WPI_VictorSPX(3);
@@ -46,6 +51,8 @@ DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
 
 I2C.Port i2cPort = I2C.Port.kOnboard;
 ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+
+PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
 
 
 
@@ -81,8 +88,15 @@ ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
   SmartDashboard.putNumber("Blue", detectedColor.blue);
   SmartDashboard.putNumber("IR", IR);
 
+  SmartDashboard.putNumber("Total Current", pdp1.getTotalCurrent());
 
+  /*SmartDashboard.putNumber("Right Bottom Motor", pdp1.getCurrent(15));
+  SmartDashboard.putNumber("Right Top Motor", pdp1.getCurrent(14));
+  SmartDashboard.putNumber("Left Bottom Motor", pdp1.getCurrent(13));
+  SmartDashboard.putNumber("Left Top Motor", pdp1.getCurrent(12));
+*/
   }
+
   /**
    * This autonomous (along with the chooser code above) shows how to select
    * between different autonomous modes using the dashboard. The sendable
@@ -112,7 +126,7 @@ ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
    */
   @Override
   public void teleopPeriodic() {
-  m_drive.tankDrive(jStick.getRawAxis(1), jStick.getRawAxis(5));
+  m_drive.tankDrive(jStick.getRawAxis(5), jStick.getRawAxis(1));
   
   if (x.get()) {
     intake.set(1);
@@ -121,6 +135,15 @@ ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
   } else {
     intake.set(0);
   }
+  
+  if (y.get()) {
+    outtake.set(1);
+  } else if (a.get()) {
+    outtake.set(-1);
+  } else {
+    outtake.set(0);
+  }
+
 }
 
   /**
