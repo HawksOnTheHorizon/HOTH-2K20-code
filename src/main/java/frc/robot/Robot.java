@@ -37,8 +37,11 @@ JoystickButton x = new JoystickButton(jStick2, 1);
 JoystickButton b = new JoystickButton(jStick2, 3);
 JoystickButton y = new JoystickButton(jStick2, 4);
 JoystickButton a = new JoystickButton(jStick2, 2);
+JoystickButton rightTrigger = new JoystickButton(jStick, 6);
+JoystickButton leftTrigger = new JoystickButton(jStick, 5);
 WPI_TalonSRX intake = new WPI_TalonSRX(6);
 WPI_TalonSRX outtake = new WPI_TalonSRX(7);
+WPI_VictorSPX belt = new WPI_VictorSPX(8);
 
 WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(2);
 WPI_VictorSPX m_rearLeft = new WPI_VictorSPX(3);
@@ -127,23 +130,42 @@ PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
   @Override
   public void teleopPeriodic() {
   m_drive.tankDrive(jStick.getRawAxis(5), jStick.getRawAxis(1));
-  
-  if (x.get()) {
+
+  if (x.get()) { //reverse intake
     intake.set(1);
-  } else if (b.get()) {
-    intake.set(-1); 
+    belt.set(1);
+  } else if (b.get()) { //intake 
+    intake.set(-1);
+    belt.set(-1); 
   } else {
     intake.set(0);
+    belt.set(0);
   }
   
-  if (y.get()) {
+  if (y.get()) { //reverse shooter 
     outtake.set(1);
-  } else if (a.get()) {
+  } else if (a.get()) { //shooting
     outtake.set(-1);
   } else {
     outtake.set(0);
   }
 
+  if (rightTrigger.get()) {
+    belt.set(1);
+  } else if (rightTrigger.get()) {
+    belt.set(-1);
+  } else {
+    belt.set(0);
+  }
+
+  if (leftTrigger.get()) {
+    intake.set(1);
+  } else if (leftTrigger.get()) {
+    intake.set(-1);
+  } else {
+    intake.set(0);
+  }
+  
 }
 
   /**
