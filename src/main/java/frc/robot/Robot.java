@@ -9,6 +9,8 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.I2C;
@@ -37,23 +39,28 @@ JoystickButton x = new JoystickButton(jStick2, 1);
 JoystickButton b = new JoystickButton(jStick2, 3);
 JoystickButton y = new JoystickButton(jStick2, 4);
 JoystickButton a = new JoystickButton(jStick2, 2);
-JoystickButton rightTrigger = new JoystickButton(jStick, 6);
-JoystickButton leftTrigger = new JoystickButton(jStick, 5);
+JoystickButton rightTrigger = new JoystickButton(jStick2, 6);
+JoystickButton leftTrigger = new JoystickButton(jStick2, 5);
 WPI_TalonSRX intake = new WPI_TalonSRX(6);
 WPI_TalonSRX outtake = new WPI_TalonSRX(7);
 WPI_VictorSPX belt = new WPI_VictorSPX(8);
 
-WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(2);
-WPI_VictorSPX m_rearLeft = new WPI_VictorSPX(3);
-SpeedControllerGroup m_left = new SpeedControllerGroup(m_frontLeft, m_rearLeft);
+WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(5);
+WPI_VictorSPX m_backLeft = new WPI_VictorSPX(3);
+SpeedControllerGroup m_left = new SpeedControllerGroup(m_frontLeft, m_backLeft);
 
 WPI_VictorSPX m_frontRight = new WPI_VictorSPX(4);
-WPI_VictorSPX m_rearRight = new WPI_VictorSPX(5);
-SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_rearRight);
+WPI_VictorSPX m_backRight = new WPI_VictorSPX(2);
+SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_backRight);
 DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
 
-I2C.Port i2cPort = I2C.Port.kOnboard;
-ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
+ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
+ColorMatch m_colorMatcher = new ColorMatch();
+Color blueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
+Color greenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
+Color redTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
+Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
 PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
 
@@ -68,7 +75,10 @@ PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
    */
   @Override
   public void robotInit() {
-  
+  m_colorMatcher.addColorMatch(blueTarget);
+  m_colorMatcher.addColorMatch(greenTarget);
+  m_colorMatcher.addColorMatch(redTarget);
+  m_colorMatcher.addColorMatch(yellowTarget);
   
   }
 
@@ -84,11 +94,29 @@ PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
   public void robotPeriodic() {
   
   Color detectedColor = m_colorSensor.getColor();
+
+  String colorString;
+  ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
+  
+  if (match.color == blueTarget) {
+    colorString = "Blue";
+  } else if (match.color == redTarget) {
+    colorString = "Red";
+  } else if (match.color == greenTarget) {
+    colorString = "Green";
+  } else if (match.color == yellowTarget) {
+    colorString = "Yellow";
+  } else {
+    colorString = "Unknown";
+  }
+
   double IR = m_colorSensor.getIR();
 
   SmartDashboard.putNumber("Red", detectedColor.red);
   SmartDashboard.putNumber("Green", detectedColor.green);
   SmartDashboard.putNumber("Blue", detectedColor.blue);
+  SmartDashboard.putNumber("Confidence", match.confidence);
+  SmartDashboard.putString("Detected Color", colorString);
   SmartDashboard.putNumber("IR", IR);
 
   SmartDashboard.putNumber("Total Current", pdp1.getTotalCurrent());
@@ -129,6 +157,7 @@ PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
    */
   @Override
   public void teleopPeriodic() {
+
   m_drive.tankDrive(jStick.getRawAxis(5), jStick.getRawAxis(1));
 
   if (x.get()) { //reverse intake
@@ -152,7 +181,7 @@ PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
 
   if (rightTrigger.get()) {
     belt.set(1);
-  } else if (rightTrigger.get()) {
+  } else if (leftTrigger.get()) {
     belt.set(-1);
   } else {
     belt.set(0);
