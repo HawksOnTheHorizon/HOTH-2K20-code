@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,9 +42,11 @@ JoystickButton y = new JoystickButton(jStick2, 4);
 JoystickButton a = new JoystickButton(jStick2, 2);
 JoystickButton rightTrigger = new JoystickButton(jStick2, 6);
 JoystickButton leftTrigger = new JoystickButton(jStick2, 5);
+JoystickButton rtTrigger = new JoystickButton(jStick2, 8);
+JoystickButton ltTrigger = new JoystickButton(jStick2, 7);
 WPI_TalonSRX intake = new WPI_TalonSRX(6);
-WPI_TalonSRX outtake = new WPI_TalonSRX(7);
-WPI_VictorSPX belt = new WPI_VictorSPX(8);
+WPI_TalonSRX belt = new WPI_TalonSRX(7);
+WPI_VictorSPX outtake = new WPI_VictorSPX(8);
 
 WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(5);
 WPI_VictorSPX m_backLeft = new WPI_VictorSPX(3);
@@ -54,15 +57,17 @@ WPI_VictorSPX m_backRight = new WPI_VictorSPX(2);
 SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_backRight);
 DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
 
-I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
-ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
+Timer m_timer = new Timer();
+
+//I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
+//ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
 ColorMatch m_colorMatcher = new ColorMatch();
 Color blueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
 Color greenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
 Color redTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
 Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
-PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
+//PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
 
 
 
@@ -93,7 +98,7 @@ PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
   @Override
   public void robotPeriodic() {
   
-  Color detectedColor = m_colorSensor.getColor();
+ /* Color detectedColor = m_colorSensor.getColor();
 
   String colorString;
   ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
@@ -141,7 +146,8 @@ PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
    */
   @Override
   public void autonomousInit() {
-    
+    m_timer.reset();
+    m_timer.start();
   }
 
   /**
@@ -149,7 +155,13 @@ PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
    */
   @Override
   public void autonomousPeriodic() {
-   
+   if (m_timer.get() < 0.5) {
+     m_drive.tankDrive(-0.5, -0.5);
+
+   } else {
+     m_drive.stopMotor();
+   }
+
   }
 
   /**
@@ -158,9 +170,9 @@ PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
   @Override
   public void teleopPeriodic() {
 
-  m_drive.tankDrive(jStick.getRawAxis(5), jStick.getRawAxis(1));
+  m_drive.tankDrive(-jStick.getRawAxis(1), -jStick.getRawAxis(5)*0.5);
 
-  if (x.get()) { //reverse intake
+  /*if (x.get()) { //reverse intake
     intake.set(1);
     belt.set(1);
   } else if (b.get()) { //intake 
@@ -170,7 +182,7 @@ PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
     intake.set(0);
     belt.set(0);
   }
-  
+  */
   if (y.get()) { //reverse shooter 
     outtake.set(1);
   } else if (a.get()) { //shooting
@@ -179,22 +191,23 @@ PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
     outtake.set(0);
   }
 
-  if (rightTrigger.get()) {
+  if (leftTrigger.get()) {
     belt.set(1);
-  } else if (leftTrigger.get()) {
+  } else if (rightTrigger.get()) {
     belt.set(-1);
   } else {
     belt.set(0);
   }
 
-  if (leftTrigger.get()) {
+  if (ltTrigger.get()) {
     intake.set(1);
-  } else if (leftTrigger.get()) {
+  } else if (rtTrigger.get()) {
     intake.set(-1);
   } else {
     intake.set(0);
   }
   
+
 }
 
   /**
