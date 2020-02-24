@@ -36,17 +36,21 @@ import edu.wpi.first.wpilibj.util.Color;
 public class Robot extends TimedRobot {
 Joystick jStick = new Joystick(0);
 Joystick jStick2 = new Joystick(1);
-JoystickButton x = new JoystickButton(jStick2, 1);
-JoystickButton b = new JoystickButton(jStick2, 3);
+JoystickButton lefttrigger = new JoystickButton(jStick2, 8);
+JoystickButton righttrigger = new JoystickButton(jStick2, 7);
 JoystickButton y = new JoystickButton(jStick2, 4);
 JoystickButton a = new JoystickButton(jStick2, 2);
-JoystickButton rightTrigger = new JoystickButton(jStick2, 6);
-JoystickButton leftTrigger = new JoystickButton(jStick2, 5);
 JoystickButton rtTrigger = new JoystickButton(jStick2, 8);
-JoystickButton ltTrigger = new JoystickButton(jStick2, 7);
+
+JoystickButton xDriver1 = new JoystickButton(jStick, 1);
+JoystickButton bDriver1 = new JoystickButton(jStick, 3);
+JoystickButton leftButton = new JoystickButton(jStick,5);
+JoystickButton rightButton = new JoystickButton(jStick,6);
+JoystickButton ltTrigger = new JoystickButton(jStick,7);
+
 WPI_TalonSRX intake = new WPI_TalonSRX(6);
 WPI_TalonSRX belt = new WPI_TalonSRX(7);
-WPI_VictorSPX outtake = new WPI_VictorSPX(8);
+WPI_VictorSPX shooter = new WPI_VictorSPX(8);
 
 WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(5);
 WPI_VictorSPX m_backLeft = new WPI_VictorSPX(3);
@@ -170,7 +174,11 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   @Override
   public void teleopPeriodic() {
 
-  m_drive.tankDrive(-jStick.getRawAxis(1), -jStick.getRawAxis(5)*0.5);
+  m_drive.tankDrive(-jStick.getRawAxis(1)*0.75, -jStick.getRawAxis(3)*0.75);
+  
+  if (rightButton.get()) {
+    m_drive.tankDrive(jStick.getRawAxis(1)*0.75, jStick.getRawAxis(3)*0.75); //reverse drivetrain; shooter becomes forward
+  } 
 
   /*if (x.get()) { //reverse intake
     intake.set(1);
@@ -183,15 +191,47 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
     belt.set(0);
   }
   */
-  if (y.get()) { //reverse shooter 
-    outtake.set(1);
-  } else if (a.get()) { //shooting
-    outtake.set(-1);
+
+  if (lefttrigger.get()) {
+    belt.set(-1); //belt moves towards shooter
+  } else if (righttrigger.get()) {
+    belt.set(1); //belt moves toward intake 
   } else {
-    outtake.set(0);
+    belt.set(0);
   }
 
-  if (leftTrigger.get()) {
+
+  if (y.get()) { //shooter; spit balls out
+    shooter.set(-1);
+  } else if (a.get()) { // reverse shooting; intakes ball from loading station 
+    shooter.set(1);
+  } else {
+    shooter.set(0);
+  }
+
+  if (leftButton.get()) {
+    intake.set(1);
+  } else if (ltTrigger.get()) {
+    intake.set(-1);
+  } else {
+    intake.set(0);
+  }
+
+  if (xDriver1.get()) {
+    // control panel (rotation control)
+  } else if (bDriver1.get()) {
+    // control panel (position control)
+  } else {
+    // nothing happens 
+  }
+
+  if (rtTrigger.get()) {
+    // hanger goes up
+  } else {
+    // nothing happens
+  }
+
+  /*if (leftTrigger.get()) {
     belt.set(1);
   } else if (rightTrigger.get()) {
     belt.set(-1);
@@ -199,14 +239,7 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
     belt.set(0);
   }
 
-  if (ltTrigger.get()) {
-    intake.set(1);
-  } else if (rtTrigger.get()) {
-    intake.set(-1);
-  } else {
-    intake.set(0);
-  }
-  
+*/ 
 
 }
 
