@@ -20,6 +20,9 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.TimedCommand;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -36,14 +39,14 @@ import edu.wpi.first.wpilibj.util.Color;
 public class Robot extends TimedRobot {
 Joystick jStick = new Joystick(0);
 Joystick jStick2 = new Joystick(1);
-JoystickButton lefttrigger = new JoystickButton(jStick2, 8);
-JoystickButton righttrigger = new JoystickButton(jStick2, 7);
+JoystickButton leftTrigger = new JoystickButton(jStick2, 8);
+JoystickButton rightTrigger = new JoystickButton(jStick2, 7);
 JoystickButton y = new JoystickButton(jStick2, 4);
 JoystickButton a = new JoystickButton(jStick2, 2);
 JoystickButton rtTrigger = new JoystickButton(jStick2, 8);
 
-JoystickButton xDriver1 = new JoystickButton(jStick, 1);
-JoystickButton bDriver1 = new JoystickButton(jStick, 3);
+JoystickButton x = new JoystickButton(jStick, 1);
+JoystickButton b = new JoystickButton(jStick, 3);
 JoystickButton leftButton = new JoystickButton(jStick,5);
 JoystickButton rightButton = new JoystickButton(jStick,6);
 JoystickButton ltTrigger = new JoystickButton(jStick,7);
@@ -178,7 +181,8 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   
   if (rightButton.get()) {
     m_drive.tankDrive(jStick.getRawAxis(1)*0.75, jStick.getRawAxis(3)*0.75); //reverse drivetrain; shooter becomes forward
-  } 
+  }
+  
 
   /*if (x.get()) { //reverse intake
     intake.set(1);
@@ -192,21 +196,35 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   }
   */
 
-  if (lefttrigger.get()) {
+  if (leftTrigger.get()) {
     belt.set(-1); //belt moves towards shooter
-  } else if (righttrigger.get()) {
+  } else if (rightTrigger.get()) {
     belt.set(1); //belt moves toward intake 
   } else {
     belt.set(0);
   }
 
+  /*if (y.get()) {
+    intake.set(-1); for 0.5 seconds
+    while shooter.set(1) for 5 seconds 
+          intake.set(1) will start running for 5 seconds
+    else 
+    intake.set(0);       
+  }
+*/
 
-  if (y.get()) { //shooter; spit balls out
-    shooter.set(-1);
+  if (y.get()) {
+    belt.set(1); 
+    shooter.set(-1);//shooter; spit balls out
+    belt.set(-1);
   } else if (a.get()) { // reverse shooting; intakes ball from loading station 
+    belt.set(-1);
     shooter.set(1);
+    belt.set(1);
   } else {
+    belt.set(0);
     shooter.set(0);
+    belt.set(0);
   }
 
   if (leftButton.get()) {
@@ -217,9 +235,9 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
     intake.set(0);
   }
 
-  if (xDriver1.get()) {
+  if (x.get()) {
     // control panel (rotation control)
-  } else if (bDriver1.get()) {
+  } else if (b.get()) {
     // control panel (position control)
   } else {
     // nothing happens 
