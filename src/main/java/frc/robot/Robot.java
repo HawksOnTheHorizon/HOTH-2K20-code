@@ -214,17 +214,10 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 */
 
   if (y.get()) {
+    m_timer.start();
     belt.set(1); 
     shooter.set(-1);//shooter; spit balls out
     belt.set(-1);
-  } else if (a.get()) { // reverse shooting; intakes ball from loading station 
-    belt.set(-1);
-    shooter.set(1);
-    belt.set(1);
-  } else {
-    belt.set(0);
-    shooter.set(0);
-    belt.set(0);
   }
 
   if (leftButton.get()) {
