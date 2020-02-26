@@ -215,14 +215,14 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
   if (y.get()) {
     m_timer.start();
-      if (m_timer.get() < 0.5)) {
+      if (m_timer.get() < 0.5) {
         belt.set(1);
       }
-        if (m_timer.get() > 0.5)) {
+        if (m_timer.get() > 0.5) {
             belt.set(0);
             shooter.set(1);
         }
-          if (m_timer.get() > 1.5)) {
+          if (m_timer.get() > 1.5) {
             belt.set(-1);
           }
   } else {
