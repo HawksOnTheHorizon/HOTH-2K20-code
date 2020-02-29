@@ -15,7 +15,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 //import com.revrobotics.ColorMatch;
 //import com.revrobotics.ColorMatchResult;
 //import com.revrobotics.ColorSensorV3;
-
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
@@ -38,32 +37,44 @@ import edu.wpi.first.wpilibj.util.Color;
  * project.
  */
 public class Robot extends TimedRobot {
+  
+  //Joysticks 
   Joystick jStick = new Joystick(0);
   Joystick jStick2 = new Joystick(1);
+
+  //Joystick buttons for Driver 2
   JoystickButton leftTrigger = new JoystickButton(jStick2, 8);
   JoystickButton rightTrigger = new JoystickButton(jStick2, 7);
   JoystickButton y = new JoystickButton(jStick2, 4);
   JoystickButton a = new JoystickButton(jStick2, 2);
   JoystickButton rtTrigger = new JoystickButton(jStick2, 8);
+
+//Joystick buttons for Driver 1
   JoystickButton x = new JoystickButton(jStick, 1);
   JoystickButton b = new JoystickButton(jStick, 3);
   JoystickButton leftButton = new JoystickButton(jStick,5);
   JoystickButton rightButton = new JoystickButton(jStick,6);
   JoystickButton ltTrigger = new JoystickButton(jStick,7);
 
+//Motor controllers for specific mechanisms 
   WPI_TalonSRX intake = new WPI_TalonSRX(6);
   WPI_TalonSRX belt = new WPI_TalonSRX(7);
   WPI_VictorSPX shooter = new WPI_VictorSPX(8);
- 
+  WPI_VictorSPX hanger = new WPI_VictorSPX(9);
+  WPI_VictorSPX controlPanelMech = new WPI_VictorSPX(10);
+
+  //Motor controllers for drivetrain (left side) 
   WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(5);
   WPI_VictorSPX m_backLeft = new WPI_VictorSPX(3);
   SpeedControllerGroup m_left = new SpeedControllerGroup(m_frontLeft, m_backLeft);
  
+  //Motor controllers for drivetrain (right side)
   WPI_VictorSPX m_frontRight = new WPI_VictorSPX(4);
   WPI_VictorSPX m_backRight = new WPI_VictorSPX(2);
   SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_backRight);
   DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
 
+  //Extras 
   Timer m_timer = new Timer();
   ADXRS450_Gyro gyro =new ADXRS450_Gyro();
   private static final double gyroAngleSetpoint = 0.0;
@@ -140,6 +151,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Left Bottom Motor", pdp1.getCurrent(13));
     SmartDashboard.putNumber("Left Top Motor", pdp1.getCurrent(12));
   */
+
   }
 
   /**
@@ -193,11 +205,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
     m_drive.tankDrive(-jStick.getRawAxis(1)*0.75, -jStick.getRawAxis(3)*0.75);
   
     if (rightButton.get()) {
       m_drive.tankDrive(jStick.getRawAxis(1)*0.75, jStick.getRawAxis(3)*0.75); //reverse drivetrain; shooter becomes forward
     }
+
 
     if (leftTrigger.get()) {
       belt.set(-1); //belt moves towards shooter
@@ -207,6 +221,7 @@ public class Robot extends TimedRobot {
       belt.set(0);
     }
     
+
       /*if (y.get()) {
         intake.set(-1); for 0.5 seconds
         while shooter.set(1) for 5 seconds 
@@ -215,6 +230,8 @@ public class Robot extends TimedRobot {
         intake.set(0);       
       }
     */
+
+
     if (y.get()) {
       belt.set(1); 
       shooter.set(-1);//shooter; spit balls out
@@ -229,6 +246,7 @@ public class Robot extends TimedRobot {
       belt.set(0);
     }
   
+
     if (leftButton.get()) {
       intake.set(0);
     } else if (ltTrigger.get()) {
@@ -247,6 +265,7 @@ public class Robot extends TimedRobot {
     }
     
   }
+
 
   /**
    * This function is called once when the robot is disabled.
@@ -275,4 +294,5 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
+  
 }
