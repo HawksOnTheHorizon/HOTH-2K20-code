@@ -13,9 +13,11 @@ import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -65,6 +67,11 @@ SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_backRigh
 DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
 
 Timer m_timer = new Timer();
+ADXRS450_Gyro gyro =new ADXRS450_Gyro();
+private static final double gyroAngleSetpoint = 0.0;
+private static final double gyroP = 0.005;
+private static final SPI.Port gyroPort = SPI.Port.kOnboardCS0;
+
 
 //I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
 //ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
@@ -91,6 +98,8 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   m_colorMatcher.addColorMatch(greenTarget);
   m_colorMatcher.addColorMatch(redTarget);
   m_colorMatcher.addColorMatch(yellowTarget);
+
+  gyro.calibrate();
   
   }
 
@@ -162,11 +171,20 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
    */
   @Override
   public void autonomousPeriodic() {
-   if (m_timer.get() < 0.5) {
+   if (m_timer.get() < 3.5) { 
+     System.out.println ("passed stage one");
      m_drive.tankDrive(-0.5, -0.5);
 
    } else {
      m_drive.stopMotor();
+   }
+
+   if ((m_timer.get() > 3.5) && (m_timer.get() < 5)) {
+    belt.set(-1);  
+    shooter.set(-1);
+   } else {
+     belt.set(0);
+     shooter.set(0);
    }
 
   }
@@ -196,6 +214,7 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   }
   */
 
+  
   if (leftTrigger.get()) {
     belt.set(-1); //belt moves towards shooter
   } else if (rightTrigger.get()) {
@@ -203,6 +222,7 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   } else {
     belt.set(0);
   }
+  
 
   /*if (y.get()) {
     intake.set(-1); for 0.5 seconds
@@ -213,23 +233,53 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   }
 */
 
-  if (y.get()) {
+/*  if (y.get()) {
     m_timer.start();
       if (m_timer.get() < 0.5) {
+        System.out.println ("belt is set to 1");
         belt.set(1);
       }
         if (m_timer.get() > 0.5) {
+          System.out.println ("shooter is set to 1 and belt is set to 0");
             belt.set(0);
             shooter.set(1);
         }
           if (m_timer.get() > 1.5) {
+            System.out.println ("belt is set to -1");
             belt.set(-1);
           }
   } else {
-    m_timer.reset();
+    System.out.println ("went through else");
     shooter.set(0);
     belt.set(0);
   }
+*/
+
+  if (y.get()) {
+    m_timer.start();
+    if (m_timer.get() < 0.5) {
+      belt.set(1);
+    } else {
+      belt.set(0);
+    }
+  
+    if ((m_timer.get() > 0.5) && (m_timer.get() < 1.5)) {
+      shooter.set(1);
+    } else {
+      shooter.set(0);
+    }
+
+    if ((m_timer.get() > 1.5) && (m_timer.get() < 2.5)) {
+      belt.set(-1);
+    } else {
+      belt.set(0);
+    }
+
+  } else {
+    m_timer.reset();
+  }
+
+
 
   if (leftButton.get()) {
     intake.set(1);
