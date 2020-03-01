@@ -238,7 +238,7 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   }
 
   if (rtTrigger.get()) {
-    hanger.set(0.25);// hanger goes up
+    hanger.set(0.65);// hanger goes up
   } else {
     hanger.set(0);// nothing happens
   }
