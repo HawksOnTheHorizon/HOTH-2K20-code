@@ -61,7 +61,7 @@ WPI_VictorSPX m_frontRight = new WPI_VictorSPX(4);
 WPI_VictorSPX m_backRight = new WPI_VictorSPX(2);
 SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_backRight);
 DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
-
+//Gfuel Energy Formula > Glitch Energy
 Timer m_timer = new Timer();
 
 //I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
