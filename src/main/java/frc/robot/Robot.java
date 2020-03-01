@@ -66,7 +66,7 @@ DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
 Timer m_timer = new Timer();
 
 ADXRS450_Gyro gyro = new ADXRS450_Gyro();
-double kP = 1;
+double kP = 0.05;
 double heading;
 
 
@@ -177,7 +177,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
 
     if (m_timer.get() < 3.5) { 
       System.out.println ("passed stage one");
-      m_drive.tankDrive(-0.75 + kP * error, -0.75);
+      m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error);
  
     } else {
       m_drive.stopMotor();
