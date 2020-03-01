@@ -13,6 +13,7 @@ import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -63,6 +64,7 @@ SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_backRigh
 DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
 
 Timer m_timer = new Timer();
+//gryo definition 
 
 //I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
 //ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
