@@ -181,6 +181,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
     if (m_timer.get() < 3.5) { 
       System.out.println ("passed stage one");
       m_drive.tankDrive(-0.75 + kP * error, -0.75 - kP * error);
+    
  
     } else {
       m_drive.stopMotor();
