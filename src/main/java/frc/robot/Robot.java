@@ -38,17 +38,17 @@ import edu.wpi.first.wpilibj.util.Color;
 public class Robot extends TimedRobot {
 Joystick jStick = new Joystick(0);
 Joystick jStick2 = new Joystick(1);
-JoystickButton lefttrigger = new JoystickButton(jStick2, 8);
-JoystickButton righttrigger = new JoystickButton(jStick2, 7);
+JoystickButton lefttrigger = new JoystickButton(jStick2, 7);
+JoystickButton righttrigger = new JoystickButton(jStick2, 8);
 JoystickButton y = new JoystickButton(jStick2, 4);
 JoystickButton a = new JoystickButton(jStick2, 2);
+JoystickButton x = new JoystickButton(jStick2, 1);
 
 JoystickButton xDriver1 = new JoystickButton(jStick, 1);
 JoystickButton bDriver1 = new JoystickButton(jStick, 3);
 JoystickButton leftButton = new JoystickButton(jStick,5);
 JoystickButton rightButton = new JoystickButton(jStick,6);
 JoystickButton ltTrigger = new JoystickButton(jStick,7);
-JoystickButton rtTrigger = new JoystickButton(jStick, 8);
 
 WPI_TalonSRX intake = new WPI_TalonSRX(6);
 WPI_TalonSRX belt = new WPI_TalonSRX(7);
@@ -186,7 +186,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
     }
  
     if ((m_timer.get() > 3.5) && (m_timer.get() < 6.5)) {
-     belt.set(-1);  
+     belt.set(1);  
      shooter.set(-1);
     } else {
       System.out.println ("that's all folks!");
@@ -202,10 +202,10 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
   @Override
   public void teleopPeriodic() {
 
-  m_drive.tankDrive(-jStick.getRawAxis(1)*0.75, -jStick.getRawAxis(3)*0.75);
+  m_drive.tankDrive(-jStick.getRawAxis(1)*0.85, -jStick.getRawAxis(3)*0.85);
   
   if (rightButton.get()) {
-    m_drive.tankDrive(jStick.getRawAxis(1)*0.75, jStick.getRawAxis(3)*0.75); //reverse drivetrain; shooter becomes forward
+    m_drive.tankDrive(jStick.getRawAxis(1)*0.85, jStick.getRawAxis(3)*0.85); //reverse drivetrain; shooter becomes forward
   } 
 
   /*if (x.get()) { //reverse intake
@@ -220,10 +220,10 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
   }
   */
 
-  if (lefttrigger.get()) {
-    belt.set(-1); //belt moves towards shooter
-  } else if (righttrigger.get()) {
-    belt.set(1); //belt moves toward intake 
+  if (righttrigger.get()) {
+    belt.set(1); //belt moves towards shooter
+  } else if (lefttrigger.get()) {
+    belt.set(-1); //belt moves toward intake 
   } else {
     belt.set(0);
   }
@@ -253,8 +253,8 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
     // nothing happens 
   }
 
-  if (rtTrigger.get()) {
-    hanger.set(0.65);// hanger goes up
+  if (x.get()) {
+    hanger.set(0.60);// hanger goes up
   } else {
     hanger.set(0);// nothing happens
   }
