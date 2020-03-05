@@ -10,10 +10,11 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorMatchResult; 
 import com.revrobotics.ColorSensorV3;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.cameraserver.CameraServer;
+          import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -62,7 +63,7 @@ WPI_VictorSPX m_frontRight = new WPI_VictorSPX(4);
 WPI_VictorSPX m_backRight = new WPI_VictorSPX(2);
 SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_backRight);
 DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
-
+//Gfuel Energy Formula > Glitch Energy
 Timer m_timer = new Timer();
 
 ADXRS450_Gyro gyro = new ADXRS450_Gyro();
@@ -96,6 +97,8 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   m_colorMatcher.addColorMatch(redTarget);
   m_colorMatcher.addColorMatch(yellowTarget);
 
+  
+  CameraServer.getInstance().startAutomaticCapture();
   
   }
 
@@ -177,15 +180,13 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
 
 
     if (m_timer.get() < 3.5) { 
-      System.out.println ("passed stage one");
-      m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error);
- 
+      m_drive.tankDrive(-0.75 + kP * error, -0.75 - kP * error);
+    
     } else {
       m_drive.stopMotor();
     }
  
     if ((m_timer.get() > 3.5) && (m_timer.get() < 6.5)) {
-    System.out.println ("passed stage two");
      belt.set(-1);  
      shooter.set(-1);
     } else {
