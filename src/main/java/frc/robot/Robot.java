@@ -14,7 +14,7 @@ import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+          import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -180,7 +180,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
 
     if (m_timer.get() < 3.5) { 
       System.out.println ("passed stage one");
-      m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error);
+      m_drive.tankDrive(-0.75 + kP * error, -0.75 - kP * error);
  
     } else {
       m_drive.stopMotor();
