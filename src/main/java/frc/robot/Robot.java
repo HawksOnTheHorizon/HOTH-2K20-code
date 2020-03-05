@@ -179,16 +179,13 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
 
 
     if (m_timer.get() < 3.5) { 
-      System.out.println ("passed stage one");
       m_drive.tankDrive(-0.75 + kP * error, -0.75 - kP * error);
     
- 
     } else {
       m_drive.stopMotor();
     }
  
     if ((m_timer.get() > 3.5) && (m_timer.get() < 6.5)) {
-    System.out.println ("passed stage two");
      belt.set(-1);  
      shooter.set(-1);
     } else {
