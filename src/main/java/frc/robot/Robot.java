@@ -163,6 +163,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
   public void autonomousInit() {
     m_timer.reset();
     m_timer.start();
+    
     heading = gyro.getAngle();
   }
 
