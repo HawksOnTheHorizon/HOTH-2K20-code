@@ -13,6 +13,7 @@ import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -89,6 +90,8 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   m_colorMatcher.addColorMatch(greenTarget);
   m_colorMatcher.addColorMatch(redTarget);
   m_colorMatcher.addColorMatch(yellowTarget);
+  
+  CameraServer.getInstance().startAutomaticCapture();
   
   }
 
