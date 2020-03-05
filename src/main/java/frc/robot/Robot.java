@@ -14,6 +14,7 @@ import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -65,6 +66,11 @@ DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
 //Gfuel Energy Formula > Glitch Energy
 Timer m_timer = new Timer();
 
+ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+double kP = 0.05;
+double heading;
+
+
 //I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
 //ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
 ColorMatch m_colorMatcher = new ColorMatch();
@@ -90,6 +96,7 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   m_colorMatcher.addColorMatch(greenTarget);
   m_colorMatcher.addColorMatch(redTarget);
   m_colorMatcher.addColorMatch(yellowTarget);
+
   
   CameraServer.getInstance().startAutomaticCapture();
   
@@ -139,6 +146,9 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   SmartDashboard.putNumber("Left Bottom Motor", pdp1.getCurrent(13));
   SmartDashboard.putNumber("Left Top Motor", pdp1.getCurrent(12));
 */
+
+SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
+
   }
 
   /**
@@ -156,6 +166,7 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   public void autonomousInit() {
     m_timer.reset();
     m_timer.start();
+    heading = gyro.getAngle();
   }
 
   /**
@@ -163,9 +174,13 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
    */
   @Override
   public void autonomousPeriodic() {
+
+    double error = heading - gyro.getAngle();
+
+
     if (m_timer.get() < 3.5) { 
       System.out.println ("passed stage one");
-      m_drive.tankDrive(-0.75, -0.75);
+      m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error);
  
     } else {
       m_drive.stopMotor();
@@ -241,7 +256,7 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   }
 
   if (rtTrigger.get()) {
-    hanger.set(0.25);// hanger goes up
+    hanger.set(0.65);// hanger goes up
   } else {
     hanger.set(0);// nothing happens
   }
