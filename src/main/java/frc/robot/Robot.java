@@ -224,6 +224,8 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
     belt.set(1); //belt moves towards shooter
   } else if (lefttrigger.get()) {
     belt.set(-1); //belt moves toward intake 
+  } else if (a.get()) {
+    belt.set(-0.4);
   } else {
     belt.set(0);
   }
@@ -232,7 +234,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
   if (y.get()) { //shooter; spit balls out
     shooter.set(-1);
   } else if (a.get()) { // reverse shooting; intakes ball from loading station 
-    shooter.set(1);
+    shooter.set(0.5);
   } else {
     shooter.set(0);
   }
