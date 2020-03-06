@@ -39,10 +39,10 @@ public class Robot extends TimedRobot {
 Joystick jStick = new Joystick(0);
 Joystick jStick2 = new Joystick(1);
 JoystickButton lefttrigger = new JoystickButton(jStick2, 7);
-JoystickButton righttrigger = new JoystickButton(jStick2, 8);
-JoystickButton y = new JoystickButton(jStick2, 4);
-JoystickButton a = new JoystickButton(jStick2, 2);
-JoystickButton x = new JoystickButton(jStick2, 1);
+JoystickButton righttrigger = new JoystickButton(jStick2, 2);
+JoystickButton y = new JoystickButton(jStick2, 1);
+JoystickButton a = new JoystickButton(jStick2, 6);
+JoystickButton x = new JoystickButton(jStick2, 3);
 
 JoystickButton xDriver1 = new JoystickButton(jStick, 1);
 JoystickButton bDriver1 = new JoystickButton(jStick, 3);
@@ -234,8 +234,6 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
 
   if (y.get()) { //shooter; spit balls out
     shooter.set(-1);
-  } else if (a.get()) { // reverse shooting; intakes ball from loading station 
-    shooter.set(0.5);
   } else {
     shooter.set(0);
   }
