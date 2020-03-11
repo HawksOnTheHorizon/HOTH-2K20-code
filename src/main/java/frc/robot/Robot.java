@@ -69,6 +69,8 @@ ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 double kP = 0.05;
 double heading;
 
+Boolean Dio = true;
+
 
 //I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
 //ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
@@ -174,23 +176,50 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
 
     double error = heading - gyro.getAngle();
 
+    if (Dio == true) {
 
-    if (m_timer.get() < 3.5) { 
-      System.out.println ("passed stage one");
-      m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error);
+      System.out.println ("Auto 1");
+      if (m_timer.get() < 3.5) { 
+        m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error);
+    
+      } else {
+        m_drive.stopMotor();
+      }
  
+      if ((m_timer.get() > 3.5) && (m_timer.get() < 6.5)) {
+        belt.set(-1);  
+        shooter.set(-1);
+     } else {
+        belt.set(0);
+        shooter.set(0);
+      }
+
     } else {
-      m_drive.stopMotor();
-    }
+      
+      System.out.println ("Auto 2"); 
+      if (m_timer.get() < 3.5) { 
+        m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error);
  
-    if ((m_timer.get() > 3.5) && (m_timer.get() < 6.5)) {
-    System.out.println ("passed stage two");
-     belt.set(-1);  
-     shooter.set(-1);
-    } else {
-      System.out.println ("that's all folks!");
-      belt.set(0);
-      shooter.set(0);
+      } else {
+        m_drive.stopMotor();
+      }
+ 
+      if ((m_timer.get() > 3.5) && (m_timer.get() < 6.5)) {
+        belt.set(-1);  
+        shooter.set(-1);
+     } else {
+        belt.set(0);
+        shooter.set(0);
+      }
+
+
+      if ((m_timer.get() > 6.5) && (m_timer.get() < 7)) { 
+        m_drive.tankDrive(0.50 + kP * error, 0.50 - kP * error);
+
+      } else {
+        m_drive.stopMotor();
+      }
+
     }
 
   }
