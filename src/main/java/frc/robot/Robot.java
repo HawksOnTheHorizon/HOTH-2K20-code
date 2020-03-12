@@ -197,27 +197,18 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
     } else {
       
       System.out.println ("Auto 2"); 
-      if (m_timer.get() < 3.5) { 
-        m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error);
- 
-      } else {
+      if (m_timer.get() > 0 && m_timer.get() < 3.5) {
+        m_drive.tankDrive(-.50 + kP * error, -.50 - kP * error);
+      } else if (m_timer.get () > 3.5 && m_timer.get() < 6.5) { 
         m_drive.stopMotor();
-      }
- 
-      if ((m_timer.get() > 3.5) && (m_timer.get() < 6.5)) {
-        belt.set(-1);  
+        belt.set(-1);
         shooter.set(-1);
-     } else {
-        belt.set(0);
-        shooter.set(0);
-      }
-
-
-      if ((m_timer.get() > 6.5) && (m_timer.get() < 7)) { 
-        m_drive.tankDrive(0.50 + kP * error, 0.50 - kP * error);
-
-      } else if (m_timer.get() > 7) {
-        m_drive.stopMotor();
+      } else if (m_timer.get() > 6.5 && m_timer.get() < 7) {
+          belt.set(0);
+          shooter.set(0);
+          m_drive.tankDrive(.50 + kP * error, .50 - kP * error);
+      } else {
+          m_drive.stopMotor();
       }
 
     }
