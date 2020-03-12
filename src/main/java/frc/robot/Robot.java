@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -70,7 +71,7 @@ ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 double kP = 0.05;
 double heading;
 
-
+Ultrasonic ultra = new Ultrasonic(0,1);
 //I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
 //ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
 ColorMatch m_colorMatcher = new ColorMatch();
@@ -112,7 +113,7 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
    */
   @Override
   public void robotPeriodic() {
-  
+    SmartDashboard.putNumber("Ultrasonic",ultra.getRangeInches());
  /* Color detectedColor = m_colorSensor.getColor();
 
   String colorString;
@@ -145,6 +146,8 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   SmartDashboard.putNumber("Right Top Motor", pdp1.getCurrent(14));
   SmartDashboard.putNumber("Left Bottom Motor", pdp1.getCurrent(13));
   SmartDashboard.putNumber("Left Top Motor", pdp1.getCurrent(12));
+
+  SmartDashboard.putUltrasonic()
 */
 
 SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
@@ -196,6 +199,8 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
     }
 
   }
+  
+  
 
   /**
    * This function is called periodically during operator control.
@@ -262,6 +267,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
     hanger.set(0);// nothing happens
   }
 
+  SmartDashboard.putBoolean("Ultrasonic",(ultra.getRangeInches()>18 && ultra.getRangeInches()<23));
   /*if (leftTrigger.get()) {
     belt.set(1);
   } else if (rightTrigger.get()) {
