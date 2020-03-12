@@ -216,7 +216,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
       if ((m_timer.get() > 6.5) && (m_timer.get() < 7)) { 
         m_drive.tankDrive(0.50 + kP * error, 0.50 - kP * error);
 
-      } else {
+      } else if (m_timer.get() > 7) {
         m_drive.stopMotor();
       }
 
