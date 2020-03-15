@@ -53,7 +53,6 @@ WPI_TalonSRX intake = new WPI_TalonSRX(6);
 WPI_TalonSRX belt = new WPI_TalonSRX(7);
 WPI_VictorSPX shooter = new WPI_VictorSPX(8);
 WPI_VictorSPX hanger = new WPI_VictorSPX(10);
-
 WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(5);
 WPI_VictorSPX m_backLeft = new WPI_VictorSPX(3);
 SpeedControllerGroup m_left = new SpeedControllerGroup(m_frontLeft, m_backLeft);
@@ -70,6 +69,7 @@ double kP = 0.05;
 double heading;
 
 Boolean Dio = true;
+AutonomousBot auto = new AutonomousBot();
 
 
 //I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
@@ -176,40 +176,47 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
 
     double error = heading - gyro.getAngle();
 
-    if (Dio == true) {
 
-      System.out.println ("Auto 1");
-      if (m_timer.get() < 3.5) { 
-        m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error);
+    switch (auto.autoSelector) {
+
+      case ONE: System.out.println ("Auto 1");
+                if (m_timer.get() < 3.5) { 
+                  m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error);
     
-      } else {
-        m_drive.stopMotor();
-      }
+                } else {
+                  m_drive.stopMotor();
+                }
  
-      if ((m_timer.get() > 3.5) && (m_timer.get() < 6.5)) {
-        belt.set(-1);  
-        shooter.set(-1);
-     } else {
-        belt.set(0);
-        shooter.set(0);
-      }
+                if ((m_timer.get() > 3.5) && (m_timer.get() < 6.5)) {
+                  belt.set(-1);  
+                  shooter.set(-1);
+                } else {
+                  belt.set(0);
+                  shooter.set(0);
+                }
+                break;
 
-    } else {
-      
-      System.out.println ("Auto 2"); 
-      if (m_timer.get() > 0 && m_timer.get() < 3.5) {
-        m_drive.tankDrive(-.50 + kP * error, -.50 - kP * error);
-      } else if (m_timer.get () > 3.5 && m_timer.get() < 6.5) { 
-        m_drive.stopMotor();
-        belt.set(-1);
-        shooter.set(-1);
-      } else if (m_timer.get() > 6.5 && m_timer.get() < 7) {
-          belt.set(0);
-          shooter.set(0);
-          m_drive.tankDrive(.50 + kP * error, .50 - kP * error);
-      } else {
-          m_drive.stopMotor();
-      }
+      case TWO: System.out.println ("Auto 2"); 
+                if (m_timer.get() > 0 && m_timer.get() < 3.5) {
+                  m_drive.tankDrive(-.50 + kP * error, -.50 - kP * error);
+                } else if (m_timer.get () > 3.5 && m_timer.get() < 6.5) { 
+                  m_drive.stopMotor();
+                  belt.set(-1);
+                  shooter.set(-1);
+                } else if (m_timer.get() > 6.5 && m_timer.get() < 7) {
+                  belt.set(0);
+                  shooter.set(0);
+                  m_drive.tankDrive(.50 + kP * error, .50 - kP * error);
+                } else {
+                  m_drive.stopMotor();
+                }
+                break;
+                
+      case THREE:
+
+      case FOUR:
+
+      case FIVE:
 
     }
 
