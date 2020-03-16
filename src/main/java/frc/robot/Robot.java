@@ -68,7 +68,6 @@ ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 double kP = 0.05;
 double heading;
 
-Boolean Dio = true;
 AutonomousBot auto = new AutonomousBot();
 
 
