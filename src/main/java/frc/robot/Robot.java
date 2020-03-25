@@ -267,7 +267,13 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
     hanger.set(0);// nothing happens
   }
 
-  SmartDashboard.putBoolean("Ultrasonic",(ultra.getRangeInches()>18 && ultra.getRangeInches()<23));
+  
+  if ((ultra.getRangeInches()>0) && (ultra.getRangeInches()<12)) { //12 is what we predicted
+    belt.set(1);
+  } else { 
+   belt.set(0); 
+    
+  }
   /*if (leftTrigger.get()) {
     belt.set(1);
   } else if (rightTrigger.get()) {
