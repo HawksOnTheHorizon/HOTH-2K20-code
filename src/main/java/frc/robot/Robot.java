@@ -272,7 +272,6 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
     belt.set(1);
   } else { 
    belt.set(0); 
-    
   }
   /*if (leftTrigger.get()) {
     belt.set(1);
