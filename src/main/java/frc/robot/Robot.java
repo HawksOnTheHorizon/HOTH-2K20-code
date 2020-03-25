@@ -211,11 +211,49 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
                 }
                 break;
                 
-      case THREE:
+      case THREE: System.out.println ("Auto 3");
+                  if (m_timer.get() > 0 && m_timer.get() < 3.5) {
+                    belt.set(-1);
+                    shooter.set(-1);
+                  } else if (m_timer.get() > 3.5 && m_timer.get() < 4) {
+                    belt.set(0);
+                    shooter.set(0);
+                    m_drive.tankDrive(.50 + kP * error, .50 - kP * error); 
+                  } else {
+                    m_drive.stopMotor();
+                  }
+                  break;
 
-      case FOUR:
+      case FOUR:  System.out.println ("Auto 4");
+                  if (m_timer.get() > 0 && m_timer.get() < 3.5) {
+                    belt.set(1);
+                    shooter.set(1);
+                  } else if (m_timer.get() > 3.5 && m_timer.get() < 4) {
+                    belt.set(0);
+                    shooter.set(0);
+                    m_drive.tankDrive(-.50 + kP * error, -.50 - kP * error); 
+                  } else {
+                    m_drive.stopMotor();
+                  }
+                  break;
 
-      case FIVE:
+      case FIVE: System.out.println ("Auto 5");
+                 if  (m_timer.get() > 0 && m_timer.get() < 2) {
+                  belt.set(0);
+                  shooter.set(0);
+                } else if (m_timer.get() > 2 && m_timer.get() < 5.5) {
+                  m_drive.tankDrive(-.50 + kP * error, -.50 - kP * error);
+                } else if (m_timer.get () > 5.5 && m_timer.get() < 8.5) { 
+                  m_drive.stopMotor();
+                  belt.set(-1);
+                  shooter.set(-1);
+                } else if (m_timer.get() > 8.5 && m_timer.get() < 9) {
+                  belt.set(0);
+                  shooter.set(0);
+                } else {
+                  m_drive.stopMotor();
+                }
+                break;
 
     }
 
