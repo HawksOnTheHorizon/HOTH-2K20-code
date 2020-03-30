@@ -255,6 +255,13 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
                 }
                 break;
 
+        case SIX: System.out.println ("Auto 6"); 
+                  if (m_timer.get() > 0 && m_timer.get() < 3.5) {
+                     m_drive.tankDrive(.50 + kP * error, .50 - kP * error);
+                  } else {
+                    m_drive.stopMotor();
+                  }
+                  break;
     }
 
   }

@@ -2,7 +2,7 @@ package frc.robot;
 
 enum AutonomiProgramis {
 
-ONE, TWO, THREE, FOUR, FIVE
+ONE, TWO, THREE, FOUR, FIVE, SIX
 
 }
 
