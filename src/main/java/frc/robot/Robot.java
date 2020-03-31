@@ -178,87 +178,84 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
 
     switch (auto.autoSelector) {
 
-      case ONE: System.out.println ("Auto 1");
-                if (m_timer.get() < 3.5) { 
-                  m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error);
-    
-                } else {
+      case ONE: System.out.println ("Auto 1"); 
+                if (m_timer.get() < 3.5) { // robot moves backward
+                  m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error); 
+                } else if (m_timer.get () > 3.5 && m_timer.get() < 6.5) { // belt moves towards shooter and shoots 3 balls  
                   m_drive.stopMotor();
-                }
- 
-                if ((m_timer.get() > 3.5) && (m_timer.get() < 6.5)) {
                   belt.set(-1);  
                   shooter.set(-1);
-                } else {
+                } else { // robot, belt, and shooter stops 
+                  m_drive.stopMotor();
                   belt.set(0);
                   shooter.set(0);
                 }
                 break;
 
       case TWO: System.out.println ("Auto 2"); 
-                if (m_timer.get() > 0 && m_timer.get() < 3.5) {
-                  m_drive.tankDrive(-.50 + kP * error, -.50 - kP * error);
-                } else if (m_timer.get () > 3.5 && m_timer.get() < 6.5) { 
+                if (m_timer.get() > 0 && m_timer.get() < 3.5) { // robot moves backward
+                  m_drive.tankDrive(-.50 + kP * error, -.50 - kP * error); 
+                } else if (m_timer.get () > 3.5 && m_timer.get() < 6.5) { // belt moves towards shooter and shoots 3 balls 
                   m_drive.stopMotor();
                   belt.set(-1);
                   shooter.set(-1);
-                } else if (m_timer.get() > 6.5 && m_timer.get() < 7) {
+                } else if (m_timer.get() > 6.5 && m_timer.get() < 7) { // belt and shooter stops; robot moves forward 
                   belt.set(0);
                   shooter.set(0);
                   m_drive.tankDrive(.50 + kP * error, .50 - kP * error);
-                } else {
+                } else { // robot stops 
                   m_drive.stopMotor();
                 }
                 break;
                 
-      case THREE: System.out.println ("Auto 3");
-                  if (m_timer.get() > 0 && m_timer.get() < 3.5) {
+      case THREE: System.out.println ("Auto 3"); // robot feeding through shooter
+                  if (m_timer.get() > 0 && m_timer.get() < 3.5) { // robot shoots 3 balls through shooter
                     belt.set(-1);
                     shooter.set(-1);
-                  } else if (m_timer.get() > 3.5 && m_timer.get() < 4) {
+                  } else if (m_timer.get() > 3.5 && m_timer.get() < 4) { // belt and shooter stop; robot moves forward 
                     belt.set(0);
                     shooter.set(0);
                     m_drive.tankDrive(.50 + kP * error, .50 - kP * error); 
-                  } else {
+                  } else { // robot stops
                     m_drive.stopMotor();
                   }
                   break;
 
       case FOUR:  System.out.println ("Auto 4");
-                  if (m_timer.get() > 0 && m_timer.get() < 3.5) {
+                  if (m_timer.get() > 0 && m_timer.get() < 3.5) { // robot shoots 3 balls through intake 
                     belt.set(1);
-                    shooter.set(1);
-                  } else if (m_timer.get() > 3.5 && m_timer.get() < 4) {
+                    intake.set(1);
+                  } else if (m_timer.get() > 3.5 && m_timer.get() < 4) { // belt and intake stop; robot moves backward 
                     belt.set(0);
-                    shooter.set(0);
+                    intake.set(0);
                     m_drive.tankDrive(-.50 + kP * error, -.50 - kP * error); 
-                  } else {
+                  } else { // robot stops
                     m_drive.stopMotor();
                   }
                   break;
 
       case FIVE: System.out.println ("Auto 5");
-                 if  (m_timer.get() > 0 && m_timer.get() < 2) {
+                 if  (m_timer.get() > 0 && m_timer.get() < 2) { // robot does not move; delay for 2* seconds
                   belt.set(0);
                   shooter.set(0);
-                } else if (m_timer.get() > 2 && m_timer.get() < 5.5) {
+                } else if (m_timer.get() > 2 && m_timer.get() < 5.5) { // robot moves backward 
                   m_drive.tankDrive(-.50 + kP * error, -.50 - kP * error);
-                } else if (m_timer.get () > 5.5 && m_timer.get() < 8.5) { 
+                } else if (m_timer.get () > 5.5 && m_timer.get() < 8.5) { // robot shoots 3 balls through shooter; robot stops
                   m_drive.stopMotor();
                   belt.set(-1);
                   shooter.set(-1);
-                } else if (m_timer.get() > 8.5 && m_timer.get() < 9) {
+                } else if (m_timer.get() > 8.5 && m_timer.get() < 9) { // belt and shooter stops
                   belt.set(0);
                   shooter.set(0);
-                } else {
+                } else { // robot stops
                   m_drive.stopMotor();
                 }
                 break;
 
         case SIX: System.out.println ("Auto 6"); 
-                  if (m_timer.get() > 0 && m_timer.get() < 3.5) {
+                  if (m_timer.get() > 0 && m_timer.get() < 3.5) { // robot moves forward
                      m_drive.tankDrive(.50 + kP * error, .50 - kP * error);
-                  } else {
+                  } else { // robot stops 
                     m_drive.stopMotor();
                   }
                   break;
