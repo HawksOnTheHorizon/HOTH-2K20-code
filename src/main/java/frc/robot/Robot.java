@@ -63,10 +63,11 @@ SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_backRigh
 DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
 
 Timer m_timer = new Timer();
+Timer n_timer = new Timer();
 
 ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 double kP = 0.05; // propotional control is a predeterminded number we use to control how much a mechanism can move (slows down the closer we get to the stop sign)
-double straightHeading; // variable used for auto init that will allow us to store the initialized angle
+double heading; // variable used for auto init that will allow us to store the initialized angle
 double rightHeading;
 
 // Car analogy: error = distance to the stop sign. this kp vlaue allows us to put pressure on the pedal and slow down the mechanism the closer we get to 0
@@ -167,7 +168,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
   public void autonomousInit() {
     m_timer.reset();
     m_timer.start();
-    straightHeading = gyro.getAngle(); // initialized angle (0)
+    heading = gyro.getAngle(); // initialized angle (0)
     rightHeading = gyro.getAngle() + 90;
   }
 
@@ -177,7 +178,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
   @Override
   public void autonomousPeriodic() {
 
-    double error = straightHeading - gyro.getAngle(); // error = initialized angle (0) - current angle 
+    double error = heading - gyro.getAngle(); // error = initialized angle (0) - current angle 
   
     switch (auto.autoSelector) {
 
@@ -239,16 +240,20 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
                       shooter.set(-1);
                   } else if (m_timer.get() > 6.5 && m_timer.get() < 7.5) {
                       m_drive.tankDrive(0.50 + kP * error, 0.50 - kP * error); // robot moves forward //write function to turn 90-degrees
-                  } else if (m_timer.get() > 7.5 && gyro.getAngle() == 90) { //make sure the getAngle part is correct
+                  } else if (m_timer.get() > 7.5 && gyro.getAngle() < rightHeading) { //make sure the getAngle part is correct
                     while (gyro.getAngle() < rightHeading) {
                         m_drive.tankDrive(-0.50 + kP * error, 0.50 + kP * error); //robot turns 
                       }
-                  } else if (m_timer.get() > 8.0 && m_timer.get() < 8.5) {
+                      heading = 90;
+                      n_timer.start();
+                  } else if (n_timer.get() < 0.5) {
+                      error = heading - gyro.getAngle();
                       m_drive.tankDrive(0.50 + kP * error, 0.50 - kP * error);
                   } else { // robot, belt, and shooter stops 
                       m_drive.stopMotor();
                       belt.set(0);
                       shooter.set(0);
+                      n_timer.reset();
                   }
                   break;
 
