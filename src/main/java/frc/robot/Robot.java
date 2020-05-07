@@ -247,7 +247,8 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
                         error = heading - gyro.getAngle();
                         m_drive.tankDrive(-0.50 + kP * error, 0.50 + kP * error); //robot turns 
                       }
-                      n_timer.start();
+                      m_drive.stopMotor();
+                      n_timer.start(); //check 244 if something goes wrong 
                   } else if (n_timer.get() < 0.5) {
                       m_drive.tankDrive(0.50 + kP * error, 0.50 - kP * error);
                   } else { // robot, belt, and shooter stops 
