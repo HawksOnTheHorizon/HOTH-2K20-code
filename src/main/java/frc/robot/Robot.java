@@ -166,6 +166,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
    */
   @Override
   public void autonomousInit() {
+    n_timer.reset(); 
     m_timer.reset();
     m_timer.start();
     heading = gyro.getAngle(); // initialized angle (0)
@@ -242,18 +243,17 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
                       m_drive.tankDrive(0.50 + kP * error, 0.50 - kP * error); // robot moves forward //write function to turn 90-degrees
                   } else if (m_timer.get() > 7.5 && gyro.getAngle() < rightHeading) { //make sure the getAngle part is correct
                     while (gyro.getAngle() < rightHeading) {
+                        heading = 90;
+                        error = heading - gyro.getAngle();
                         m_drive.tankDrive(-0.50 + kP * error, 0.50 + kP * error); //robot turns 
                       }
-                      heading = 90;
                       n_timer.start();
                   } else if (n_timer.get() < 0.5) {
-                      error = heading - gyro.getAngle();
                       m_drive.tankDrive(0.50 + kP * error, 0.50 - kP * error);
                   } else { // robot, belt, and shooter stops 
                       m_drive.stopMotor();
                       belt.set(0);
                       shooter.set(0);
-                      n_timer.reset();
                   }
                   break;
 
