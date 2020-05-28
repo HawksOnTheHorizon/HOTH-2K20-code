@@ -75,8 +75,8 @@ double rightHeading;
 AutonomousBot auto = new AutonomousBot();
 
 
-//I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
-//ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
+I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
+ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
 ColorMatch m_colorMatcher = new ColorMatch();
 Color blueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
 Color greenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
@@ -115,7 +115,7 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   @Override
   public void robotPeriodic() {
   
- /* Color detectedColor = m_colorSensor.getColor();
+  Color detectedColor = m_colorSensor.getColor();
 
   String colorString;
   ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
@@ -141,9 +141,10 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   SmartDashboard.putString("Detected Color", colorString);
   SmartDashboard.putNumber("IR", IR);
 
+/*
   SmartDashboard.putNumber("Total Current", pdp1.getTotalCurrent());
 
-  /*SmartDashboard.putNumber("Right Bottom Motor", pdp1.getCurrent(15));
+  SmartDashboard.putNumber("Right Bottom Motor", pdp1.getCurrent(15));
   SmartDashboard.putNumber("Right Top Motor", pdp1.getCurrent(14));
   SmartDashboard.putNumber("Left Bottom Motor", pdp1.getCurrent(13));
   SmartDashboard.putNumber("Left Top Motor", pdp1.getCurrent(12));
