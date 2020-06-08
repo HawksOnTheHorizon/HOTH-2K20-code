@@ -55,6 +55,8 @@ WPI_TalonSRX intake = new WPI_TalonSRX(6);
 WPI_TalonSRX belt = new WPI_TalonSRX(7);
 WPI_VictorSPX shooter = new WPI_VictorSPX(8);
 WPI_VictorSPX hanger = new WPI_VictorSPX(10);
+WPI_VictorSPX colorMotor = new WPI_VictorSPX(11);
+
 
 WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(5);
 WPI_VictorSPX m_backLeft = new WPI_VictorSPX(3);
@@ -72,14 +74,18 @@ double kP = 0.05;
 double heading;
 
 
-//I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
-//ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
+I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port  
+ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
 ColorMatch m_colorMatcher = new ColorMatch();
+ColorMatch rotationMatcher = new ColorMatch();
 Color blueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
 Color greenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
 Color redTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
 Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
+boolean motorHasNotStarted = true;
+Color firstColor;
+int counter = 0;
 //PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
 
 
@@ -114,7 +120,7 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   @Override
   public void robotPeriodic() {
   
- /* Color detectedColor = m_colorSensor.getColor();
+  Color detectedColor = m_colorSensor.getColor();
 
   String colorString;
   ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
@@ -139,8 +145,6 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   SmartDashboard.putNumber("Confidence", match.confidence);
   SmartDashboard.putString("Detected Color", colorString);
   SmartDashboard.putNumber("IR", IR);
-
-  SmartDashboard.putNumber("Total Current", pdp1.getTotalCurrent());
 
   /*SmartDashboard.putNumber("Right Bottom Motor", pdp1.getCurrent(15));
   SmartDashboard.putNumber("Right Top Motor", pdp1.getCurrent(14));
@@ -246,8 +250,26 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
     intake.set(0);
   }
 
-  if (xDriver1.get()) {
-    // control panel (rotation control)
+  
+  if (xDriver1.get()) { // control panel (rotation control)
+    // If top trigger is pressed then detect current color, store it in a variable to track and start motor.
+    if (motorHasNotStarted) { 
+      firstColor = m_colorSensor.getColor();
+      rotationMatcher.addColorMatch(firstColor);
+    } 
+    if (counter < 8) {
+      colorMotor.set(0.25);
+    } 
+    motorHasNotStarted = false;
+    //If color sensor sees the color we’re tracking then add one to counter
+    ColorMatchResult ndMatch = rotationMatcher.matchClosestColor(m_colorSensor.getColor());
+      if (ndMatch.color == firstColor) {
+        counter++;
+      }
+    // If counter is greater than or equal to 8 then motor stop
+      if (counter >= 8) {
+        colorMotor.set(0);
+      } 
   } else if (bDriver1.get()) {
     // control panel (position control)
   } else {
@@ -259,7 +281,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
   } else {
     hanger.set(0);// nothing happens
   }
-
+  }
   /*if (leftTrigger.get()) {
     belt.set(1);
   } else if (rightTrigger.get()) {
