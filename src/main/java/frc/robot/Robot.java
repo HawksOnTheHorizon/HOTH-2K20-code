@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-
+import edu.wpi.first.wpilibj.DriverStation;
 
 
 /**
@@ -78,14 +78,17 @@ I2C.Port i2cPort = I2C.Port.kOnboard; //adressing I2C port
 ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort); //adressing color sensor and placing 
 ColorMatch m_colorMatcher = new ColorMatch();
 ColorMatch rotationMatcher = new ColorMatch();
+ColorMatch positionMatcher = new ColorMatch();
 Color blueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
 Color greenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
 Color redTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
 Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
-boolean motorHasNotStarted = true;
+boolean motorHasNotStarted = true; //the motor has not started 
 Color firstColor;
 int counter = 0;
+String gameAssigned;
+boolean InPosition = false; // the color is not in position under the color wheel sensor 
 //PowerDistributionPanel pdp1 = new PowerDistributionPanel(1);
 
 
@@ -102,7 +105,7 @@ int counter = 0;
   m_colorMatcher.addColorMatch(blueTarget);
   m_colorMatcher.addColorMatch(greenTarget);
   m_colorMatcher.addColorMatch(redTarget);
-  m_colorMatcher.addColorMatch(yellowTarget);
+  m_colorMatcher.addColorMatch(yellowTarget); 
 
   
   CameraServer.getInstance().startAutomaticCapture();
@@ -123,7 +126,7 @@ int counter = 0;
   Color detectedColor = m_colorSensor.getColor();
 
   String colorString;
-  ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
+  ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor); 
   
   if (match.color == blueTarget) {
     colorString = "Blue";
@@ -259,8 +262,8 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
     } 
     if (counter < 8) {
       colorMotor.set(0.25);
+      motorHasNotStarted = false;
     } 
-    motorHasNotStarted = false;
     //If color sensor sees the color we’re tracking then add one to counter
     ColorMatchResult ndMatch = rotationMatcher.matchClosestColor(m_colorSensor.getColor());
       if (ndMatch.color == firstColor) {
@@ -270,8 +273,47 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
       if (counter >= 8) {
         colorMotor.set(0);
       } 
-  } else if (bDriver1.get()) {
+  } else if (bDriver1.get() && !InPosition) {
     // control panel (position control)
+    //If button is pressed, then look for game assigned string.
+    gameAssigned = DriverStation.getInstance().getGameSpecificMessage();
+    //If game assigned string is bigger than 0:
+    if (gameAssigned.length() > 0) {
+      //switch statement containing first letter of game assigned string.
+      ColorMatchResult cases = m_colorMatcher.matchClosestColor(m_colorSensor.getColor());
+      colorMotor.set(0.25);
+      switch (gameAssigned.charAt(0)) {
+        //case is B: if color sensor does not detect red, then move motor.
+          case 'B': 
+                    if (cases.color == redTarget) {
+                      colorMotor.set(0);
+                      InPosition = true;
+                    }
+          break;
+          //case is G: if color sensor does not detect yellow, then move motor.
+          case 'G':
+                    if (cases.color == yellowTarget) {
+                      colorMotor.set(0);
+                      InPosition = true;
+                    }
+          break;
+          //case is R: if color sensor does not detect blue, then move motor. 
+          case 'R':
+                  if (cases.color == blueTarget) {
+                    colorMotor.set(0);
+                    InPosition = true;
+                  }
+          break;
+          //case is Y: if color sensor does not detect green, then move motor.
+          case 'Y':
+                  if (cases.color == greenTarget) {
+                    colorMotor.set(0);
+                    InPosition = true;
+                  }
+          break;
+      }     
+    }     
+
   } else {
     // nothing happens 
   }
