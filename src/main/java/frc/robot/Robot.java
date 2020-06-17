@@ -101,17 +101,6 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   m_colorMatcher.addColorMatch(redTarget);
   m_colorMatcher.addColorMatch(yellowTarget);
 
-  if (xDriver1.get()) {
-      auto.autoSelector = AutonomiProgramis.ONE;
-  } else if (y.get()) {
-      auto.autoSelector = AutonomiProgramis.TWO;
-  } else if (a.get()) {
-      auto.autoSelector = AutonomiProgramis.THREE;
-  } else if (bDriver1.get()) {
-      auto.autoSelector = AutonomiProgramis.FOUR;
-  } else if (righttrigger.get()){ //later change to SELECT joystick button
-      auto.autoSelector = AutonomiProgramis.FIVE;
-  }
 
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -160,6 +149,18 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 */
 
 SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
+
+if (xDriver1.get()) {
+  auto.autoSelector = AutonomiProgramis.ONE;
+} else if (y.get()) {
+  auto.autoSelector = AutonomiProgramis.TWO;
+} else if (a.get()) {
+  auto.autoSelector = AutonomiProgramis.THREE;
+} else if (bDriver1.get()) {
+  auto.autoSelector = AutonomiProgramis.FOUR;
+} else if (righttrigger.get()){ //later change to SELECT joystick button
+  auto.autoSelector = AutonomiProgramis.FIVE;
+}
 
   }
 
