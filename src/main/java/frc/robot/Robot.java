@@ -101,7 +101,7 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
   m_colorMatcher.addColorMatch(redTarget);
   m_colorMatcher.addColorMatch(yellowTarget);
 
-
+  }
   /**
    * This function is called every robot packet, no matter the mode. Use
    * this for items like diagnostics that you want ran during disabled,
