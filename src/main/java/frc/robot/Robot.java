@@ -103,7 +103,14 @@ Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
   if (xDriver1.get()) {
       auto.autoSelector = AutonomiProgramis.ONE;
-  }
+  } else if (y.get()) {
+      auto.autoSelector = AutonomiProgramis.TWO;
+  } else if (a.get()) {
+      auto.autoSelector = AutonomiProgramis.THREE;
+  } else if (bDriver1.get()) {
+      auto.autoSelector = AutonomiProgramis.FOUR;
+  } else if (righttrigger.get()){ //later change to SELECT joystick button
+      auto.autoSelector = AutonomiProgramis.FIVE;
   }
 
   /**
