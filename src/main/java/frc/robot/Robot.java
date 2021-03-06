@@ -178,22 +178,42 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
 
     double error = heading - gyro.getAngle();
 
-
-    if (m_timer.get() < 3.5) { 
-      m_drive.tankDrive(-0.75 + kP * error, -0.75 - kP * error);
-    
+    if (m_timer.get() < 4) { 
+      m_drive.tankDrive(0.75 + kP * error, 0.75 - kP * error);
+      belt.set(1);
+      intake.set(1);
     } else {
       m_drive.stopMotor();
+      belt.set(0);
+      intake.set(0);
     }
  
-    if ((m_timer.get() > 3.5) && (m_timer.get() < 6.5)) {
-     belt.set(1);  
-     shooter.set(-1);
-    } else {
-      System.out.println ("that's all folks!");
+    if ((m_timer.get() > 4) && (m_timer.get() < 4.1)) {
+      m_drive.tankDrive(0.5 + kP * error, 1 + kP * error);
+    } else  if ((m_timer.get() > 4.1) && (m_timer.get() < 4.5)) {
+      m_drive.tankDrive(0.75 + kP * error, 0.75 + kP * error);
+      belt.set(1);
+      intake.set(1);
+    } else if ((m_timer.get() > 4.5) && (m_timer.get() < 4.6)) {
+      m_drive.tankDrive(1 + kP * error, 0.5 + kP * error);
       belt.set(0);
-      shooter.set(0);
-    }
+      intake.set(0);
+    } else if ((m_timer.get() > 4.6) && (m_timer.get() < 7)) {
+      m_drive.tankDrive(0.75 + kP * error, 0.75 + kP * error);
+      belt.set(1);
+      intake.set(1);
+    } else if ((m_timer.get() > 7) && (m_timer.get() < 7.2)) {
+      m_drive.tankDrive(0.5 + kP * error, 1 + kP * error);
+      belt.set(0);
+      intake.set(0);
+    } else if ((m_timer.get() > 7.2) && (m_timer.get() < 8)) {
+      belt.set(1);
+      intake.set(1);
+    } else {
+      m_drive.stopMotor();
+      belt.set(0);
+      intake.set(0);
+    } 
 
   }
 
@@ -203,7 +223,7 @@ SmartDashboard.getNumber("Gyro Angle", gyro.getAngle());
   @Override
   public void teleopPeriodic() {
 
-  m_drive.tankDrive(-jStick.getRawAxis(1)*0.85, -jStick.getRawAxis(3)*0.85);
+  m_drive.tankDrive(-jStick.getRawAxis(1)*0.60, -jStick.getRawAxis(3)*0.60);
   
   if (rightButton.get()) {
     m_drive.tankDrive(jStick.getRawAxis(1)*0.85, jStick.getRawAxis(3)*0.85); //reverse drivetrain; shooter becomes forward
