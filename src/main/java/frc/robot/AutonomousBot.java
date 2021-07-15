@@ -9,7 +9,7 @@ ONE, TWO, THREE, FOUR, FIVE
 
 public class AutonomousBot {
 
-    public AutonomiProgramis autoSelector = AutonomiProgramis.ONE;
+    public AutonomiProgramis autoSelector = AutonomiProgramis.FIVE;
 
     public AutonomousBot() {
 

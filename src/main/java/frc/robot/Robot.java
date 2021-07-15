@@ -199,8 +199,8 @@ if (xDriver1.get()) {
                   m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error); // the smaller the number, that is the direction we are turning in
                 } else if (m_timer.get () > 3.5 && m_timer.get() < 6.5) { // belt moves towards shooter and shoots 3 balls  
                   m_drive.stopMotor();
-                  belt.set(-1);  
-                  shooter.set(-1);
+                  belt.set(1);  
+                  shooter.set(1);
                 } else { // robot, belt, and shooter stops 
                   m_drive.stopMotor();
                   belt.set(0);
@@ -210,9 +210,9 @@ if (xDriver1.get()) {
 
       case TWO: System.out.println ("Auto 2"); // robot shoots 3 balls (feeding other robot) and moves forward 
                 if (m_timer.get() > 0 && m_timer.get() < 3.5) { // belt moves towards shooter and shoots 3 balls 
-                  belt.set(-1);
-                  shooter.set(-1);
-                } else if (m_timer.get () > 3.5 && m_timer.get() < 4) { // belt and shooter stops, robot moves forward 
+                  belt.set(1);
+                  shooter.set(1);
+                } else if (m_timer.get () > 3.5 && m_timer.get() < 5.5) { // belt and shooter stops, robot moves forward 
                   belt.set(0);
                   shooter.set(0);
                   m_drive.tankDrive(.50 + kP * error, .50 - kP * error);
@@ -223,11 +223,11 @@ if (xDriver1.get()) {
                 
       case THREE: System.out.println ("Auto 3"); // robot shoots 3 balls through intake (feeding other robot) and moves backwards
                   if (m_timer.get() > 0 && m_timer.get() < 3.5) { // robot shoots 3 balls through intake
-                    belt.set(1);
-                    shooter.set(1);
-                  } else if (m_timer.get() > 3.5 && m_timer.get() < 4) { // belt and shooter stop; robot moves backwards 
+                    belt.set(-1);
+                    intake.set(1);
+                  } else if (m_timer.get() > 3.5 && m_timer.get() < 5.5) { // belt and shooter stop; robot moves backwards 
                     belt.set(0);
-                    shooter.set(0);
+                    intake.set(0);
                     m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error); 
                   } else { // robot stops
                     m_drive.stopMotor();
@@ -235,7 +235,7 @@ if (xDriver1.get()) {
                   break;
 
       case FOUR:  System.out.println ("Auto 4"); // robot moves forward and stays stationary
-                  if (m_timer.get() > 0 && m_timer.get() < 3.5) { // robot moves forward
+                  if (m_timer.get() > 0 && m_timer.get() < 2.5) { // robot moves forward
                       m_drive.tankDrive(0.50 + kP * error, 0.50 - kP * error);
                   } else { // robot stops 
                       m_drive.stopMotor();
@@ -248,9 +248,14 @@ if (xDriver1.get()) {
                       m_drive.tankDrive(-0.50 + kP * error, -0.50 - kP * error); 
                   } else if (m_timer.get () > 3.5 && m_timer.get() < 6.5) { // belt moves towards shooter and shoots 3 balls  
                       m_drive.stopMotor();
-                      belt.set(-1);  
-                      shooter.set(-1);
-                  } else if (m_timer.get() > 6.5 && m_timer.get() < 7.5) {
+                      belt.set(1);  
+                      shooter.set(1);
+                  } else {
+                    m_drive.stopMotor();
+                    belt.set(0);
+                    shooter.set(0);
+                  }
+                  /*} else if (m_timer.get() > 6.5 && m_timer.get() < 7.5) {
                       m_drive.tankDrive(0.50 + kP * error, 0.50 - kP * error); // robot moves forward //write function to turn 90-degrees
                   } else if (m_timer.get() > 7.5 && gyro.getAngle() < rightHeading) { //make sure the getAngle part is correct
                     while (gyro.getAngle() < rightHeading) {
@@ -267,6 +272,7 @@ if (xDriver1.get()) {
                       belt.set(0);
                       shooter.set(0);
                   }
+                  */
                   break;
 
       
